@@ -83,12 +83,13 @@ void display() {
 	 * Note: Only one should be called at a time (based on the
 	 * display mode).
 	 */
-    if(_2dmode)
+    if(_2dmode){
       drawPoints();
-    else
-      drawSurface();
-    if(num_i0_pts > 1)
+      if(num_i0_pts > 1)
         drawLines();
+    }else
+      draw3DLines();
+      //drawSurface();
 
     glFlush();  /* Flush all executed OpenGL ops finish */
 
@@ -109,10 +110,18 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       if(num_i0_pts > 4){
 		    _2dmode = false;
         generate3D();
-        printf("Rotating...\n");
+        printf("Rotating into 3D...\n");
+        display();
       }
       else
         printf("Warning: Not enough control points to perform rotation\n");
+      break;
+
+    case 'z' :
+      if(!_2dmode) 
+        printf("Switching back to 2D...\n");
+      _2dmode = true;
+      display();
       break;
 
 		default:
@@ -126,6 +135,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 }
 
 void myMouseButton(int button, int state, int x, int y) {
+  if(!_2dmode) return;
 	if (state == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
 			// Add a point, if there is room
@@ -142,7 +152,7 @@ void myMouseButton(int button, int state, int x, int y) {
           i0[num_i0_pts].z = 0.0;
           i0[num_i0_pts].w = 0.0;
           num_i0_pts++;
-          printf("x: %3d, y: %3d, i: %3d\n", x, y, num_i0_pts);
+          printf("x: %3d, y: %3d, i: %3d\n", new_x, new_y, num_i0_pts);
           display();
         }
       }else
