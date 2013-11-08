@@ -35,7 +35,7 @@ GLfloat ftop    =  40.0;
 GLfloat zNear   =  40.0;
 GLfloat zFar    = -40.0;
 
-bool _2dmode = 1;
+bool _2dmode = true;
 
 /* local function declarations */
 void init(void);
@@ -107,14 +107,14 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 			break;
 
     case 'w':
-      if(num_i0_pts > 4){
+      if(num_i0_pts > 4 && _2dmode){
 		    _2dmode = false;
         generate3D();
         printf("Rotating into 3D...\n");
         display();
       }
       else
-        printf("Warning: Not enough control points to perform rotation\n");
+        printf("Warning: Not enough control points to perform rotation or already in 3D\n");
       break;
 
     case 'z' :
