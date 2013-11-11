@@ -52,9 +52,9 @@ class vector{
     }
 
     void rotateVector(GLfloat angle, vector& new_vec){
-        GLfloat rmat[] =   {cos(angle), 0.0, sin(angle), 0.0,
+        GLfloat rmat[] =   {cos(angle * (3.14/180)), 0.0, sin(angle * (3.14/180)), 0.0,
                             0.0,        1.0,        0.0, 0.0,
-                            -sin(angle),0.0, cos(angle), 0.0,
+                            -sin(angle * (3.14/180)),0.0, cos(angle * (3.14/180)), 0.0,
                             0.0,        0.0,        0.0, 1.0};
         matrixVectorMultiply(rmat, new_vec);
     }
