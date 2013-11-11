@@ -122,7 +122,7 @@ GLfloat *mergePointsArrays(GLfloat *arr1, GLfloat *arr2, int size) {
  * routine also frees the space used by the old "draw_x" and "draw_y" arrays,
  * if they exist.
  */
-void subdividePointsArray(int subdiv_level) {
+void subdividePointsArray(int subdiv_level) {`
 	assert(subdiv_level >= 0);
 
 	/* ADD YOUR CODE HERE */

@@ -42,6 +42,7 @@ GLfloat zFar    = -120.0;
 
 bool _2dmode = true;
 bool displayCP = false;
+bool wireframe = false;
 
 /* local function declarations */
 void init(void);
@@ -83,7 +84,7 @@ void display() {
 	 * Note: Only one should be called at a time (based on the
 	 * display mode).
 	 */
-	setup2DMode();
+	  setup2DMode();
     if(_2dmode){
       draw2DPoints();
       if(num_i0_pts > 1){
@@ -92,9 +93,10 @@ void display() {
     }else{
 	  if(displayCP)
       draw3DPoints();
-	  else
+	  else if(wireframe)
       draw3DLines();
-      //drawSurface();
+    else
+      drawSurface();
     }
 
     glFlush();  /* Flush all executed OpenGL ops finish */
@@ -157,6 +159,25 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 	    display();
 	    break;
 
+    case 'e' : 
+      if(!_2dmode)
+        wireframe = !wireframe;
+      else printf("Warning: cannot do this in 2D");
+      display();
+      break;
+
+    // case 'a' :
+    //   if(!_2dmode)
+    //     applyVerticalSubdivision();
+    //   display();
+    //   break;
+
+    // case 's' :
+    //   if(!_2dmode)
+    //     applyHorizontalSubdivision();
+    //   display();
+    //   break;
+
     case ',':
       rotateCamera(5, X_AXIS);
       break;
@@ -218,7 +239,7 @@ void myMouseButton(int button, int state, int x, int y) {
   if (button == GLUT_RIGHT_BUTTON) {
     if(num_i0_pts > 0){
       num_i0_pts--;
-			printf("i: %3d\n", num_i0_pts);
+			printf("Deleted point i: %3d\n", num_i0_pts);
       display();
     }else
 			printf("Warning: No points to delete\n");

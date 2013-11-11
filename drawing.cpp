@@ -25,8 +25,59 @@ int subdiv_h; // The user-specified subdivision level, horizontal
 
 /* The parameter list may need to be changed for the functions in this file */
 
-void drawSurface(void) {
+void glVertex(vector vec){
+    glVertex3f(vec.x, vec.y, vec.z);
+}
 
+void drawSurface(void) {
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i0[i]);
+        glVertex(i0[i+1]);
+        glVertex(i1[i]);
+        glEnd();
+    }
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i1[i]);
+        glVertex(i1[i+1]);
+        glVertex(i0[i+1]);
+        glEnd();
+    }
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i1[i]);
+        glVertex(i1[i+1]);
+        glVertex(i2[i]);
+        glEnd();
+    }
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i2[i]);
+        glVertex(i2[i+1]);
+        glVertex(i1[i+1]);
+        glEnd();
+    }
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i2[i]);
+        glVertex(i2[i+1]);
+        glVertex(i0[i]);
+        glEnd();
+    }
+    for(int i = 0; i < num_i0_pts-1; i++){
+        glBegin(GL_POLYGON);
+        glColor3f( 0.95f, 0.207, 0.031f );
+        glVertex(i0[i]);
+        glVertex(i0[i+1]);
+        glVertex(i2[i+1]);
+        glEnd();
+    }
 }
 
 void draw2DPoints(void){
@@ -113,13 +164,17 @@ void draw3DLines(void){
 }
 
 void generate3D(void){
+    printf("Results of rotation: \n");
+    for(int i = 0; i < num_i0_pts; i++){
+        printf("i0[%i]: x: %f, y: %f, z: %f\n", i, i0[i].x, i0[i].y, i0[i].z);
+    }
     for(int i = 0; i < num_i0_pts; i++){
         i0[i].rotateVector(120.0, i1[i]);
-        printf("Results of rotation: i0[%i]: x: %f, y: %f, z: %f  i1[%i]: x: %f, y: %f, z: %f\n", i, i0[i].x, i0[i].y, i0[i].z, i, i1[i].x, i1[i].y, i1[i].z);
+        printf("i1[%i]: x: %f, y: %f, z: %f\n", i, i1[i].x, i1[i].y, i1[i].z);
     }
 	for(int i = 0; i < num_i0_pts; i++){
         i0[i].rotateVector(-120.0, i2[i]);
-        printf("Results of rotation: i0[%i]: x: %f, y: %f, z: %f  i2[%i]: x: %f, y: %f, z: %f\n", i, i0[i].x, i0[i].y, i0[i].z, i, i2[i].x, i2[i].y, i2[i].z);
+        printf("i2[%i]: x: %f, y: %f, z: %f\n", i, i2[i].x, i2[i].y, i2[i].z);
     }
 }
 
