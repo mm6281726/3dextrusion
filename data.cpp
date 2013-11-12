@@ -151,8 +151,6 @@ void applyOddRule(vector &new_vec, vector &left_vec, vector &right_vec){
 void applyVerticalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
 	std::vector<vector*> slice (num_draw_pts);
-	printf("num_draw_pts: %i\n", num_draw_pts);
-	printPoints(obj);
 	obj.clear();
 	for(int j = 0; j < new_obj.size(); j++){
 		slice.clear();
@@ -177,7 +175,11 @@ void applyVerticalSubdivision(){
 }
 
 void applyHorizontalSubdivision(){
+	std::vector<std::vector<vector*> > new_obj = obj;
+	obj.clear();
+	for(int i = 0; i < new_obj[0].size(); i++){
 
+	}
 }
 
 /**********************************************

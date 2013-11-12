@@ -33,7 +33,7 @@ void drawSurface(void) {
     for(int j = 0; j < obj.size() - 1; j++){
         for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
-            glColor3f( 0.0f, 0.0f, 0.0f + (j+1.0)/8.0);
+            glColor3f( 0.0f, 0.0f, 1.0f - (j+1.0)/8.0);
             glVertex(obj[j][i]);
             glVertex(obj[j][i+1]);
             glVertex(obj[j+1][i]);
@@ -41,7 +41,7 @@ void drawSurface(void) {
         }
         for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
-            glColor3f( 0.0f, 0.0f, 0.0f + (j+1.0)/8.0);
+            glColor3f( 0.0f, 0.0f, 1.0f - (j+1.0)/8.0);
             glVertex(obj[j+1][i]);
             glVertex(obj[j+1][i+1]);
             glVertex(obj[j][i+1]);
