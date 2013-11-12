@@ -58,6 +58,9 @@ int mouse_mode;
 /* The last position of the mouse since the last callback */
 int m_last_x, m_last_y;
 
+int vertSubDivLevel = 0;
+int horzSubDivLevel = 0;
+
 /* local function declarations */
 void init(void);
 void setUp2DMode();
@@ -198,7 +201,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
     case 'w':
 	  if(!_2dmode){
-      printf("Warning: already in 3D");
+      printf("Warning: already in 3D\n");
 		  break;
 	  }else if(num_i0_pts > 4){
 		  _2dmode = false;
@@ -221,26 +224,34 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 	  case 'r' :
 	    if(!_2dmode)
 	      displayCP = !displayCP;
-	    else printf("Warning: cannot do this in 2D");
+	    else printf("Warning: cannot do this in 2D\n");
 	    display();
 	    break;
 
     case 'e' : 
       if(!_2dmode)
         wireframe = !wireframe;
-      else printf("Warning: cannot do this in 2D");
+      else printf("Warning: cannot do this in 2D\n");
       display();
       break;
 
-    // case 'a' :
-    //   if(!_2dmode)
-    //     applyVerticalSubdivision();
-    //   display();
-    //   break;
+    case 'a' :
+      if(!_2dmode && vertSubDivLevel < 6){
+        vertSubDivLevel++;
+        applyVerticalSubdivision(vertSubDivLevel);
+        printf("Applying vertical subdivision level %i\n", vertSubDivLevel);
+      }else if(vertSubDivLevel > 5) printf("Warning: maximum vertical subdivisions reached\n");
+      else if(_2dmode) printf("Warning: cannot do this in 2D\n");
+      display();
+      break;
 
     // case 's' :
-    //   if(!_2dmode)
-    //     applyHorizontalSubdivision();
+    //   if(!_2dmode && horzSubDivLevel < 6){
+    //     horzSubDivLevel++;
+    //     applyHorizontalSubdivision(horzSubDivLevel);
+    //     printf("Applying horizontal subdivision level %i\n", horzSubDivLevel);
+    //   }else if(horzSubDivLevel > 5) printf("Warning: maximum horizontal subdivisions reached\n");
+    //   else if(_2dmode) printf("Warning: cannot do this in 2D\n");
     //   display();
     //   break;
 

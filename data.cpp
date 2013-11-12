@@ -130,6 +130,25 @@ void subdividePointsArray(int subdiv_level) {
 	return;
 }
 
+//1/8(pi-1 + 6(pi) + pi+1)
+void applyEvenRule(){
+
+}
+
+//1/8(pi-1 + 6(pi) + pi+1)
+void applyOddRule(){
+
+}
+
+void applyVerticalSubdivision(int level){
+	for(int i = 1; i < num_i0_pts; i++){
+		
+	}
+}
+
+void applyHorizontalSubdivision(int level){
+
+}
 
 /**********************************************
  * End Routines for Midpoint Subdivision 
