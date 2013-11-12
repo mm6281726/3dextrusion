@@ -40,6 +40,19 @@ GLfloat zFar    = -120.0;
 #define Y_AXIS      1
 #define Z_AXIS      2
 
+/* The three different operations the mouse can control for the canvas */
+#define MOUSE_ROTATE_YX   0
+#define MOUSE_ROTATE_YZ   1
+#define MOUSE_ZOOM      2
+
+/* The current mode the mouse is in, based on what button(s) is pressed */
+int mouse_mode;
+
+/* The last position of the mouse since the last callback */
+int m_last_x, m_last_y;
+
+GLfloat zoomFactor = 1.0;
+
 bool _2dmode = true;
 bool displayCP = false;
 bool wireframe = false;
@@ -214,6 +227,19 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
 void myMouseButton(int button, int state, int x, int y) {
   if(!_2dmode) return;
+  if (state == GLUT_DOWN && !_2dmode) {
+    m_last_x = x;
+    m_last_y = y;
+
+    if (button == GLUT_LEFT_BUTTON) {
+      mouse_mode = MOUSE_ROTATE_YX;
+    } else if (button == GLUT_MIDDLE_BUTTON) {
+      mouse_mode = MOUSE_ROTATE_YZ;
+    } else if (button == GLUT_RIGHT_BUTTON) {
+      mouse_mode = MOUSE_ZOOM;
+    }
+  }
+
 	if (state == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
 			// Add a point, if there is room
@@ -245,6 +271,57 @@ void myMouseButton(int button, int state, int x, int y) {
 			printf("Warning: No points to delete\n");
     }
   }
+}
+
+void myMouseMotion(int x, int y) {
+  double d_x, d_y;  /* The change in x and y since the last callback */
+
+  d_x = x - m_last_x;
+  d_y = y - m_last_y;
+
+  m_last_x = x;
+  m_last_y = y;
+
+  if (mouse_mode == MOUSE_ROTATE_YX) {
+    /* scaling factors */
+    d_x /= 2.0;
+    d_y /= 2.0;
+
+    glRotatef(d_x, 0.0, 1.0, 0.0);  /* y-axis rotation */
+    glRotatef(-d_y, 1.0, 0.0, 0.0); /* x-axis rotation */
+
+  } else if (mouse_mode == MOUSE_ROTATE_YZ) {
+    /* scaling factors */
+    d_x /= 2.0;
+    d_y /= 2.0;
+
+    glRotatef(d_x, 0.0, 1.0, 0.0);  /* y-axis rotation */
+    glRotatef(-d_y, 0.0, 0.0, 1.0); /* z-axis rotation */
+
+  } else if (mouse_mode == MOUSE_ZOOM) {
+    d_y /= 100.0;
+
+    zoomFactor += d_y;
+
+    if (zoomFactor <= 0.0) {
+      /* The zoom factor should be positive */
+      zoomFactor = 0.001;
+    }
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    /*
+     * glFrustum must receive positive values for the near and far
+     * clip planes ( arguments 5 and 6 ).
+     */
+    glFrustum(fleft*zoomFactor, fright*zoomFactor,
+      fbottom*zoomFactor, ftop*zoomFactor,
+      -zNear, -zFar);
+  }
+
+  /* Redraw the screen */
+  glutPostRedisplay();
 }
 
 void endSubdiv(int status) {
