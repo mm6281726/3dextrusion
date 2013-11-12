@@ -176,10 +176,19 @@ void applyVerticalSubdivision(){
 
 void applyHorizontalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
+	std::vector<vector*> stack (num_draw_pts);
 	obj.clear();
-	for(int i = 0; i < new_obj[0].size(); i++){
-
+	for(int i = 1; i < new_obj.size(); i++){
+		stack.clear();
+		obj.push_back(new_obj[i-1]);
+		for(int j = 0; j < num_draw_pts; j++){
+			vector *vec = new vector();
+			applyOddRule(*vec, *new_obj[i-1][j], *new_obj[i][j]);
+			stack.push_back(vec);
+		}
+		obj.push_back(stack);
 	}
+	num_draw_pts = 2*num_draw_pts-1;
 }
 
 /**********************************************

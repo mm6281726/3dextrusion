@@ -101,22 +101,30 @@ void draw2DLines(void){
 
 void draw3DLines(void){
     glLineWidth(2.5);
+    printf("!!!!!!!!!!!!!!!!!!!!!\n");
+    printf("!!!!!!!!!!!!!!!!!!!!!BEFORELOOPS\n");
     for(int j = 0; j < obj.size() - 1; j++){
+        printf("!!!!!!!!!!!!!!!!!!!!!BEGINLOOP\n");
         for(int i = 0; i < num_draw_pts-1; i++){
+            printf("!!!!!!!!!!!!!!!!!!!!!FIRSTLOOP\n");
             glBegin(GL_LINES);
             glColor3f( 1.0f, 0.0f, 0.0f);
             glVertex(obj[j][i]);
             glVertex(obj[j][i+1]);
             glEnd();
         }
+        printf("!!!!!!!!!!!!!!!!!!!!!ENDFIRST\n");
         for(int i = 0; i < num_draw_pts-1; i++){
+            printf("!!!!!!!!!!!!!!!!!!!!!SECONDLOOP\n");
             glBegin(GL_LINES);
             glColor3f( 0.0f, 1.0f, .0f);
             glVertex(obj[j][i]);
             glVertex(obj[j+1][i]);
             glEnd();
         }
+        printf("!!!!!!!!!!!!!!!!!!!!!ENDSECONDLOOP\n");
     }
+    printf("!!!!!!!!!!!!!!!!!!!!!MADEIT\n");
     for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_LINES);
         glColor3f( 1.0f, 0.0f, 1.0f );
