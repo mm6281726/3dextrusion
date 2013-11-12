@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <assert.h>
+#include <assert.h> 
 
 #include "common.h"
 #include "data.h"
@@ -22,11 +22,15 @@
 GLfloat i0_x[MAX_POINT];    // Iteration 0 control points, x
 GLfloat i0_y[MAX_POINT];    // Iteration 0 control points, y
 
-vector i0[MAX_POINT];
-vector i1[MAX_POINT];
-vector i2[MAX_POINT];
+std::vector<vector*> i0;
+std::vector<vector*> i1;
+std::vector<vector*> i2;
+
+std::vector<std::vector<vector*> > obj;
 
 int num_i0_pts;             // The number of iteration 0 control points
+
+int num_total_pts;
 
 GLfloat *draw_x;     // Control points to be drawn, x
 GLfloat *draw_y;     // Control points to be drawn, y
@@ -131,18 +135,30 @@ void subdividePointsArray(int subdiv_level) {
 }
 
 //1/8(pi-1 + 6(pi) + pi+1)
-void applyEvenRule(){
-
+void applyEvenRule(vector &left_vec, vector &mid_vec, vector &right_vec){
+	mid_vec.x = (1/8)*(left_vec.x + 6*(mid_vec.x) + right_vec.x);
+	mid_vec.y = (1/8)*(left_vec.y + 6*(mid_vec.y) + right_vec.y);
+	mid_vec.z = (1/8)*(left_vec.z + 6*(mid_vec.z) + right_vec.z);
 }
 
-//1/8(pi-1 + 6(pi) + pi+1)
-void applyOddRule(){
-
+//1/8(4(pi) + 4(pi+1))
+void applyOddRule(vector &new_vec, vector &left_vec, vector &right_vec){
+	new_vec.x = (1/8)*(4*left_vec.x + 4*right_vec.x);
+	new_vec.y = (1/8)*(4*left_vec.y + 4*right_vec.y);
+	new_vec.z = (1/8)*(4*left_vec.z + 4*right_vec.z);
 }
 
 void applyVerticalSubdivision(int level){
-	for(int i = 1; i < num_i0_pts; i++){
-		
+	num_total_pts = 2*num_total_pts+1;
+	for(uint j = 0; j < obj.size()-1; j++){
+		for(int i = 1; i < num_total_pts-2; i++){
+			if(i%2==0) applyEvenRule(*obj[j][i-1], *obj[j][i], *obj[j][i+1]);
+			else{
+				vector *vec = new vector();
+				applyOddRule(*vec, *obj[j][i], *obj[j][i+1]);
+				obj[j].insert(i, vec);
+			}
+		}
 	}
 }
 

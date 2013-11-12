@@ -1,6 +1,7 @@
 #ifndef _DATA_H_
 #define _DATA_H_
 #include "vector.h"
+#include <vector>
 
 /* Globals declared in data.cpp */
 
@@ -10,11 +11,14 @@
 extern GLfloat i0_x[MAX_POINT];	// Iteration 0 control points, x
 extern GLfloat i0_y[MAX_POINT];	// Iteration 0 control points, y
 
-extern vector i0[MAX_POINT];
-extern vector i1[MAX_POINT];
-extern vector i2[MAX_POINT];
+extern std::vector<vector*> i0;
+extern std::vector<vector*> i1;
+extern std::vector<vector*> i2;
+
+extern std::vector<std::vector<vector*> > obj;
 
 extern int num_i0_pts;			// The number of iteration 0 control points
+extern int num_total_pts;
 
 extern GLfloat *draw_x;		// Control points to be drawn, x
 extern GLfloat *draw_y;		// Control points to be drawn, y

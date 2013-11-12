@@ -58,9 +58,6 @@ int mouse_mode;
 /* The last position of the mouse since the last callback */
 int m_last_x, m_last_y;
 
-int vertSubDivLevel = 0;
-int horzSubDivLevel = 0;
-
 /* local function declarations */
 void init(void);
 void setUp2DMode();
@@ -236,21 +233,21 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       break;
 
     case 'a' :
-      if(!_2dmode && vertSubDivLevel < 6){
-        vertSubDivLevel++;
-        applyVerticalSubdivision(vertSubDivLevel);
-        printf("Applying vertical subdivision level %i\n", vertSubDivLevel);
-      }else if(vertSubDivLevel > 5) printf("Warning: maximum vertical subdivisions reached\n");
+      if(!_2dmode && subdiv_v < 6){
+        subdiv_v++;
+        applyVerticalSubdivision(subdiv_v);
+        printf("Applying vertical subdivision level %i\n", subdiv_v);
+      }else if(subdiv_v > 5) printf("Warning: maximum vertical subdivisions reached\n");
       else if(_2dmode) printf("Warning: cannot do this in 2D\n");
       display();
       break;
 
     // case 's' :
-    //   if(!_2dmode && horzSubDivLevel < 6){
-    //     horzSubDivLevel++;
-    //     applyHorizontalSubdivision(horzSubDivLevel);
-    //     printf("Applying horizontal subdivision level %i\n", horzSubDivLevel);
-    //   }else if(horzSubDivLevel > 5) printf("Warning: maximum horizontal subdivisions reached\n");
+    //   if(!_2dmode && subdiv_h < 6){
+    //     subdiv_h++;
+    //     applyHorizontalSubdivision(subdiv_h);
+    //     printf("Applying horizontal subdivision level %i\n", subdiv_h);
+    //   }else if(subdiv_h > 5) printf("Warning: maximum horizontal subdivisions reached\n");
     //   else if(_2dmode) printf("Warning: cannot do this in 2D\n");
     //   display();
     //   break;
@@ -325,12 +322,9 @@ void myMouseButton(int button, int state, int x, int y) {
         int new_y = 200 - y;
 		    i0_x[num_i0_pts] = new_x;
         i0_y[num_i0_pts] = new_y;
-        i0[num_i0_pts].x = new_x;
-        i0[num_i0_pts].y = new_y;
-        i0[num_i0_pts].z = 0.0;
-        i0[num_i0_pts].w = 0.0;
 		    if(new_x > -20){
           num_i0_pts++;
+          num_total_pts++;
           printf("x: %3d, y: %3d, i: %3d\n", new_x, new_y, num_i0_pts);
 		    }
           display();
