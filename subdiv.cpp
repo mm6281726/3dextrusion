@@ -19,7 +19,6 @@
 #include "drawing.h"
 #include "data.h"
 #include "vector.h"
-#include "mouse.h"
 
 /* GLOBAL VARAIBLES */
 /* (storage is actually allocated here) */
@@ -33,8 +32,8 @@ GLfloat fleft   = -40.0;
 GLfloat fright  =  40.0;
 GLfloat fbottom = -40.0;
 GLfloat ftop    =  40.0;
-GLfloat zNear   =  200.0;
-GLfloat zFar    = -200.0;
+GLfloat zNear   =  300.0;
+GLfloat zFar    = -300.0;
 
 /* Constants for specifying the 3 coordinate axes */
 #define X_AXIS      0
@@ -45,14 +44,6 @@ GLfloat zFar    = -200.0;
 #define MOUSE_ROTATE_YX   0
 #define MOUSE_ROTATE_YZ   1
 #define MOUSE_ZOOM      2
-
-/* The current mode the mouse is in, based on what button(s) is pressed */
-int mouse_mode;
-
-/* The last position of the mouse since the last callback */
-int m_last_x, m_last_y;
-
-GLfloat zoomFactor = 1.0;
 
 bool _2dmode = true;
 bool displayCP = false;
@@ -72,8 +63,10 @@ void init(void);
 void setUp2DMode();
 void display(void);
 void rotateCamera(double deg, int axis);
+void resetCamera( void );
 void myKeyHandler(unsigned char ch, int x, int y);
 void myMouseButton(int button, int state, int x, int y);
+void myMouseMotion(int x, int y);
 void endSubdiv(int status);
 
 int main (int argc, char** argv) {
@@ -86,6 +79,7 @@ int main (int argc, char** argv) {
   glutDisplayFunc(display);
   glutKeyboardFunc(myKeyHandler);
   glutMouseFunc(myMouseButton);
+  glutMotionFunc(myMouseMotion);
   glutMainLoop();
   return 0;
 }
@@ -177,8 +171,27 @@ void zoomCamera(double delta) {
 
 }
 
+/*
+ * Resets the viewing frustum and moves the drawing point to the center of
+ * the frustum.
+ */
+void resetCamera( void ) {
+  zoomFactor = 1.0;
+  glClearColor(0.0, 0.0, 0.0, 0.0);  
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-W/2, W/2, -H/2, H/2, -zNear, -zFar);
+}
+
 void myKeyHandler(unsigned char ch, int x, int y) {
 	switch(ch) {
+    case 'c':
+      if(!_2dmode)
+        resetCamera();
+      display();
+      printf("Camera reset.\n");
+      break;
+
 		case 'q':
 			endSubdiv(0);
 			break;
@@ -197,8 +210,10 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       break;
 
     case 'z' :
-      if(!_2dmode) 
+      if(!_2dmode){ 
         printf("Switching back to 2D...\n");
+        resetCamera();
+      }
       _2dmode = true;
       display();
       break;
@@ -276,7 +291,6 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
 void myMouseButton(int button, int state, int x, int y) {
   if(!_2dmode) return;
-<<<<<<< HEAD
   if (state == GLUT_DOWN && !_2dmode) {
     m_last_x = x;
     m_last_y = y;
@@ -290,23 +304,7 @@ void myMouseButton(int button, int state, int x, int y) {
     }
   }
 
-	if (state == GLUT_DOWN) {
-=======
-
-  if (state == GLUT_DOWN && !_2dmode) {
-      m_last_x = x;
-      m_last_y = y;
-
-      if (button == GLUT_LEFT_BUTTON) {
-        mouse_mode = MOUSE_ROTATE_YX;
-      } else if (button == GLUT_MIDDLE_BUTTON) {
-        mouse_mode = MOUSE_ROTATE_YZ;
-      } else if (button == GLUT_RIGHT_BUTTON) {
-        mouse_mode = MOUSE_ZOOM;
-      }
-    } 
-	if (state == GLUT_DOWN && _2dmode) {
->>>>>>> cafed4468e9d1ca4e45cfaad8c02d0f1b9f149df
+	else if (state == GLUT_DOWN && _2dmode) {
 		if (button == GLUT_LEFT_BUTTON) {
 			// Add a point, if there is room
       if(num_i0_pts < 30){
@@ -328,7 +326,8 @@ void myMouseButton(int button, int state, int x, int y) {
       }else
 				  printf("Warning: Number of points has reached the maximum\n");
 		}
-  if (button == GLUT_RIGHT_BUTTON) {
+
+  else if (button == GLUT_RIGHT_BUTTON && _2dmode) {
     if(num_i0_pts > 0){
       num_i0_pts--;
 			printf("Deleted point i: %3d\n", num_i0_pts);
@@ -340,6 +339,7 @@ void myMouseButton(int button, int state, int x, int y) {
 }
 
 void myMouseMotion(int x, int y) {
+  if(_2dmode) return;
   double d_x, d_y;  /* The change in x and y since the last callback */
 
   d_x = x - m_last_x;
