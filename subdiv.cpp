@@ -11,6 +11,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <string.h>
 #include <math.h>
 #include <assert.h>
@@ -199,7 +200,6 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     case 'w':
 	  if(!_2dmode){
       printf("Warning: already in 3D\n");
-		  break;
 	  }else if(num_i0_pts > 4){
 		  _2dmode = false;
       printf("Rotating into 3D...\n");
@@ -207,7 +207,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       display();
     }else
       printf("Warning: Not enough control points to perform rotation\n");
-      break;
+    break;
 
     case 'z' :
       if(!_2dmode){ 

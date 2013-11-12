@@ -12,6 +12,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <string.h>
 #include <math.h>
 #include <assert.h> 
@@ -129,9 +130,9 @@ void subdividePointsArray(int subdiv_level) {
 }
 
 void printPoints(std::vector<std::vector<vector*> > obj){
-	for(int j = 0; j < obj.size(); j++)
-		for(int i = 0; i < obj[0].size(); i++)
-			printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", j, i, obj[j][i]->x, obj[j][i]->y, obj[j][i]->z);
+	for(unsigned int j = 0; j < obj.size(); j++)
+		for(unsigned int i = 0; i < obj[0].size(); i++)
+			std::cout << "obj[" << j << "][" << i << "]: x: " << obj[j][i]->x << ", y: " << obj[j][i]->y << ", z: " << obj[j][i]->z << std::endl;
 }
 
 //1.0/8.0(pi-1 + 6.0(pi) + pi+1)
@@ -150,25 +151,25 @@ void applyOddRule(vector &new_vec, vector &left_vec, vector &right_vec){
 
 void applyVerticalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
-	std::vector<vector*> slice (num_draw_pts);
+	std::vector<vector*> stack (num_draw_pts);
 	obj.clear();
-	for(int j = 0; j < new_obj.size(); j++){
-		slice.clear();
-		slice.push_back(new_obj[j][0]);
+	for(unsigned int j = 0; j < new_obj.size(); j++){
+		stack.clear();
+		stack.push_back(new_obj[j][0]);
 		for(int i = 1; i < num_draw_pts; i++){
 			//Odd Rule
 			vector *vec1 = new vector();
 			applyOddRule(*vec1, *new_obj[j][i-1], *new_obj[j][i]);
-			slice.push_back(vec1);
+			stack.push_back(vec1);
 
 			//Even Rule
 			if(i == num_draw_pts-1) continue;
 			vector *vec2 = new vector();
 		    applyEvenRule(*vec2, *new_obj[j][i-1], *new_obj[j][i], *new_obj[j][i+1]);
-		    slice.push_back(vec2);
+		    stack.push_back(vec2);
 		}
-		slice.push_back(new_obj[j][num_draw_pts-1]);
-		obj.push_back(slice);
+		stack.push_back(new_obj[j][num_draw_pts-1]);
+		obj.push_back(stack);
 	}
 	printPoints(obj);
 	num_draw_pts = 2*num_draw_pts-1;
@@ -176,18 +177,27 @@ void applyVerticalSubdivision(){
 
 void applyHorizontalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
-	std::vector<vector*> stack (num_draw_pts);
 	obj.clear();
-	for(int i = 1; i < new_obj.size(); i++){
-		stack.clear();
-		obj.push_back(new_obj[i-1]);
-		for(int j = 0; j < num_draw_pts; j++){
-			vector *vec = new vector();
-			applyOddRule(*vec, *new_obj[i-1][j], *new_obj[i][j]);
-			stack.push_back(vec);
+	obj.resize(obj.size()*2);
+	printPoints(obj);
+	for(int i = 0; i < num_draw_pts; i++){
+		for(unsigned int j = 0; j < new_obj.size(); j++){
+			vector *vec1 = new vector();
+			if(j == 0)
+				applyEvenRule(*vec1, *new_obj[new_obj.size()-1][i], *new_obj[j][i], *new_obj[j+1][i]);
+			else 
+				applyEvenRule(*vec1, *new_obj[j-1][i], *new_obj[j][i], *new_obj[j+1][i]);
+			obj[j].push_back(vec1);
+
+			vector *vec2 = new vector();
+			if(j == new_obj.size()-1)
+				applyOddRule(*vec2, *new_obj[j][i], *new_obj[0][i]);
+			else
+				applyOddRule(*vec2, *new_obj[j][i], *new_obj[j+1][i]);
+			obj[j+1].push_back(vec2);
 		}
-		obj.push_back(stack);
 	}
+	printPoints(obj);
 	num_draw_pts = 2*num_draw_pts-1;
 }
 

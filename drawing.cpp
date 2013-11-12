@@ -30,7 +30,7 @@ void glVertex(vector *vec){
 }
 
 void drawSurface(void) {
-    for(int j = 0; j < obj.size() - 1; j++){
+    for(unsigned int j = 0; j < obj.size() - 1; j++){
         for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
             glColor3f( 0.0f, 0.0f, 1.0f - (j+1.0)/8.0);
@@ -80,7 +80,7 @@ void draw3DPoints(void){
     glPointSize( 6.0 );
     glBegin( GL_POINTS );
     glColor3f( 0.95f, 0.207, 0.031f );
-    for(int j = 0; j < obj.size(); j++){
+    for(unsigned int j = 0; j < obj.size(); j++){
         for(int i = 0; i < num_draw_pts; i++){
             glVertex3f( obj[j][i]->x, obj[j][i]->y, obj[j][i]->z );
         }
@@ -103,7 +103,7 @@ void draw3DLines(void){
     glLineWidth(2.5);
     printf("!!!!!!!!!!!!!!!!!!!!!\n");
     printf("!!!!!!!!!!!!!!!!!!!!!BEFORELOOPS\n");
-    for(int j = 0; j < obj.size() - 1; j++){
+    for(unsigned int j = 0; j < obj.size() - 1; j++){
         printf("!!!!!!!!!!!!!!!!!!!!!BEGINLOOP\n");
         for(int i = 0; i < num_draw_pts-1; i++){
             printf("!!!!!!!!!!!!!!!!!!!!!FIRSTLOOP\n");
