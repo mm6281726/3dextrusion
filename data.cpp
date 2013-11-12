@@ -178,24 +178,38 @@ void applyVerticalSubdivision(){
 void applyHorizontalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
 	obj.clear();
-	obj.resize(obj.size()*2);
-	printPoints(obj);
+	obj.resize(new_obj.size()*2);
+	for(unsigned i = 0; i < obj.size(); i++)
+		obj[i].resize(num_draw_pts);
+	int new_point_count = 0;
 	for(int i = 0; i < num_draw_pts; i++){
 		for(unsigned int j = 0; j < new_obj.size(); j++){
+			printf("dis dat printf %i %i\n", j, i);
 			vector *vec1 = new vector();
 			if(j == 0)
 				applyEvenRule(*vec1, *new_obj[new_obj.size()-1][i], *new_obj[j][i], *new_obj[j+1][i]);
-			else 
+			else if(j == new_obj.size()-1)
+				applyEvenRule(*vec1, *new_obj[j-1][i], *new_obj[j][i], *new_obj[0][i]);
+			else
 				applyEvenRule(*vec1, *new_obj[j-1][i], *new_obj[j][i], *new_obj[j+1][i]);
-			obj[j].push_back(vec1);
+			obj[new_point_count].push_back(vec1);
+			new_point_count++;
 
 			vector *vec2 = new vector();
-			if(j == new_obj.size()-1)
+			if(j == new_obj.size()-1){
+				printf("WORKPLEASE SHOULD APPEAR AFTER THIS\n");
 				applyOddRule(*vec2, *new_obj[j][i], *new_obj[0][i]);
-			else
+			}else{
+				printf("PLEASE\n");
 				applyOddRule(*vec2, *new_obj[j][i], *new_obj[j+1][i]);
-			obj[j+1].push_back(vec2);
+				printf("HERE\n");
+			}
+			obj[new_point_count].push_back(vec2);
+			new_point_count++;
+			printf("WOOOOOOOOORKPLEASEEEEEEE\n");
 		}
+		printf("end innerloop\n");
+		printPoints(obj);
 	}
 	printPoints(obj);
 	num_draw_pts = 2*num_draw_pts-1;
