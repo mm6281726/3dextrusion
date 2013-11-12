@@ -32,7 +32,7 @@ void glVertex(vector vec){
 void drawSurface(void) {
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 1.0f, 0.0f, 0.0f );
         glVertex(i0[i]);
         glVertex(i0[i+1]);
         glVertex(i1[i]);
@@ -40,7 +40,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 1.0f, 0.0f, 0.0f );
         glVertex(i1[i]);
         glVertex(i1[i+1]);
         glVertex(i0[i+1]);
@@ -48,7 +48,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
         glVertex(i1[i]);
         glVertex(i1[i+1]);
         glVertex(i2[i]);
@@ -56,7 +56,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
         glVertex(i2[i]);
         glVertex(i2[i+1]);
         glVertex(i1[i+1]);
@@ -64,7 +64,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(i2[i]);
         glVertex(i2[i+1]);
         glVertex(i0[i]);
@@ -72,7 +72,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_i0_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.95f, 0.207, 0.031f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(i0[i]);
         glVertex(i0[i+1]);
         glVertex(i2[i+1]);

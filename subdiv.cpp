@@ -19,6 +19,7 @@
 #include "drawing.h"
 #include "data.h"
 #include "vector.h"
+#include "mouse.h"
 
 /* GLOBAL VARAIBLES */
 /* (storage is actually allocated here) */
@@ -32,8 +33,8 @@ GLfloat fleft   = -40.0;
 GLfloat fright  =  40.0;
 GLfloat fbottom = -40.0;
 GLfloat ftop    =  40.0;
-GLfloat zNear   =  120.0;
-GLfloat zFar    = -120.0;
+GLfloat zNear   =  200.0;
+GLfloat zFar    = -200.0;
 
 /* Constants for specifying the 3 coordinate axes */
 #define X_AXIS      0
@@ -43,6 +44,15 @@ GLfloat zFar    = -120.0;
 bool _2dmode = true;
 bool displayCP = false;
 bool wireframe = false;
+
+/* Global zoom factor.  Modified by user input. Initially 1.0 */
+GLfloat zoomFactor = 1.0; 
+
+/* The current mode the mouse is in, based on what button(s) is pressed */
+int mouse_mode;
+
+/* The last position of the mouse since the last callback */
+int m_last_x, m_last_y;
 
 /* local function declarations */
 void init(void);
@@ -126,6 +136,34 @@ void rotateCamera(double deg, int axis) {
   glRotatef(deg, x, y, z);
 }
 
+/*
+ * Changes the level of zooming by adjusting the dimenstions of the viewing
+ * frustum.
+ *
+ * Args: delta - the change in the zoom factor.  Negative deltas cause the
+ * camera to zoom in, while positive values cause the camera to zoom out.
+ */
+void zoomCamera(double delta) {
+  zoomFactor += delta;
+
+  if (zoomFactor <= 0.0) {
+    /* The zoom factor should be positive */
+    zoomFactor = 0.001;
+  }
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  /*
+   * glFrustum must receive positive values for the near and far clip planes
+   * ( arguments 5 and 6 ).
+   */
+  glFrustum(fleft*zoomFactor, fright*zoomFactor,
+    fbottom*zoomFactor, ftop*zoomFactor,
+    -zNear, -zFar);
+
+}
+
 void myKeyHandler(unsigned char ch, int x, int y) {
 	switch(ch) {
 		case 'q':
@@ -179,28 +217,39 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     //   break;
 
     case ',':
-      rotateCamera(5, X_AXIS);
+      if(!_2dmode) rotateCamera(5, X_AXIS);
       break;
 
     case '<':
-      rotateCamera(-5, X_AXIS);
+      if(!_2dmode) rotateCamera(-5, X_AXIS);
       break;
 
     case '.':
-      rotateCamera(5, Y_AXIS);
+      if(!_2dmode) rotateCamera(5, Y_AXIS);
       break;
 
     case '>':
-      rotateCamera(-5, Y_AXIS);
+      if(!_2dmode) rotateCamera(-5, Y_AXIS);
       break;
 
     case '/':
-      rotateCamera(5, Z_AXIS);
+      if(!_2dmode) rotateCamera(5, Z_AXIS);
       break;
 
     case '?':
-      rotateCamera(-5, Z_AXIS);
+      if(!_2dmode) rotateCamera(-5, Z_AXIS);
       break;
+
+    case '+':
+      /* Zoom in */
+      zoomCamera(-0.1);
+      break;
+
+    case '=':
+      /* Zoom out */
+      zoomCamera(0.1);
+      break;
+
 
 		default:
 			/* Unrecognized keypress */
@@ -214,7 +263,20 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
 void myMouseButton(int button, int state, int x, int y) {
   if(!_2dmode) return;
-	if (state == GLUT_DOWN) {
+
+  if (state == GLUT_DOWN && !_2dmode) {
+      m_last_x = x;
+      m_last_y = y;
+
+      if (button == GLUT_LEFT_BUTTON) {
+        mouse_mode = MOUSE_ROTATE_YX;
+      } else if (button == GLUT_MIDDLE_BUTTON) {
+        mouse_mode = MOUSE_ROTATE_YZ;
+      } else if (button == GLUT_RIGHT_BUTTON) {
+        mouse_mode = MOUSE_ZOOM;
+      }
+    } 
+	if (state == GLUT_DOWN && _2dmode) {
 		if (button == GLUT_LEFT_BUTTON) {
 			// Add a point, if there is room
       if(num_i0_pts < 30){
