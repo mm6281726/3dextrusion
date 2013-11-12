@@ -134,21 +134,21 @@ void printPoints(std::vector<std::vector<vector*> > obj){
 			printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", j, i, obj[j][i]->x, obj[j][i]->y, obj[j][i]->z);
 }
 
-//1/8(pi-1 + 6(pi) + pi+1)
+//1.0/8.0(pi-1 + 6.0(pi) + pi+1)
 void applyEvenRule(vector &new_vec, vector &left_vec, vector &mid_vec, vector &right_vec){
-	new_vec.x = (1/8)*(left_vec.x + 6*(mid_vec.x) + right_vec.x);
-	new_vec.y = (1/8)*(left_vec.y + 6*(mid_vec.y) + right_vec.y);
-	new_vec.z = (1/8)*(left_vec.z + 6*(mid_vec.z) + right_vec.z);
+	new_vec.x = (1.0/8.0)*(left_vec.x + 6.0*(mid_vec.x) + right_vec.x);
+	new_vec.y = (1.0/8.0)*(left_vec.y + 6.0*(mid_vec.y) + right_vec.y);
+	new_vec.z = (1.0/8.0)*(left_vec.z + 6.0*(mid_vec.z) + right_vec.z);
 }
 
-//1/8(4(pi) + 4(pi+1))
+//1.0/8.0(4.0(pi) + 4.0(pi+1))
 void applyOddRule(vector &new_vec, vector &left_vec, vector &right_vec){
-	new_vec.x = (1/8)*(4*left_vec.x + 4*right_vec.x);
-	new_vec.y = (1/8)*(4*left_vec.y + 4*right_vec.y);
-	new_vec.z = (1/8)*(4*left_vec.z + 4*right_vec.z);
+	new_vec.x = (1.0/8.0)*(4.0*left_vec.x + 4.0*right_vec.x);
+	new_vec.y = (1.0/8.0)*(4.0*left_vec.y + 4.0*right_vec.y);
+	new_vec.z = (1.0/8.0)*(4.0*left_vec.z + 4.0*right_vec.z);
 }
 
-void applyVerticalSubdivision(int level){
+void applyVerticalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
 	std::vector<vector*> slice (num_draw_pts);
 	printf("num_draw_pts: %i\n", num_draw_pts);
@@ -157,13 +157,14 @@ void applyVerticalSubdivision(int level){
 	for(int j = 0; j < new_obj.size(); j++){
 		slice.clear();
 		slice.push_back(new_obj[j][0]);
-		for(int i = 1; i < num_draw_pts-1; i++){
+		for(int i = 1; i < num_draw_pts; i++){
 			//Odd Rule
 			vector *vec1 = new vector();
 			applyOddRule(*vec1, *new_obj[j][i-1], *new_obj[j][i]);
 			slice.push_back(vec1);
 
 			//Even Rule
+			if(i == num_draw_pts-1) continue;
 			vector *vec2 = new vector();
 		    applyEvenRule(*vec2, *new_obj[j][i-1], *new_obj[j][i], *new_obj[j][i+1]);
 		    slice.push_back(vec2);
@@ -175,7 +176,7 @@ void applyVerticalSubdivision(int level){
 	num_draw_pts = 2*num_draw_pts-1;
 }
 
-void applyHorizontalSubdivision(int level){
+void applyHorizontalSubdivision(){
 
 }
 

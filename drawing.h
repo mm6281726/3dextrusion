@@ -12,6 +12,6 @@ void draw3DPoints(void);
 void draw2DLines(void);
 void draw3DLines(void);
 void generate3D(void);
-void setup2DMode(void);
+void setupAxis(void);
 
 #endif	/* _DRAWING_H_ */

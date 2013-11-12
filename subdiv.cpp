@@ -101,7 +101,7 @@ void display() {
 	 * Note: Only one should be called at a time (based on the
 	 * display mode).
 	 */
-	  setup2DMode();
+	  setupAxis();
     if(_2dmode){
       draw2DPoints();
       if(num_i0_pts > 1){
@@ -235,22 +235,22 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     case 'a' :
       if(!_2dmode && subdiv_v < 6){
         subdiv_v++;
-        applyVerticalSubdivision(subdiv_v);
+        applyVerticalSubdivision();
         printf("Applying vertical subdivision level %i\n", subdiv_v);
       }else if(subdiv_v > 5) printf("Warning: maximum vertical subdivisions reached\n");
       else if(_2dmode) printf("Warning: cannot do this in 2D\n");
       display();
       break;
 
-    // case 's' :
-    //   if(!_2dmode && subdiv_h < 6){
-    //     subdiv_h++;
-    //     applyHorizontalSubdivision(subdiv_h);
-    //     printf("Applying horizontal subdivision level %i\n", subdiv_h);
-    //   }else if(subdiv_h > 5) printf("Warning: maximum horizontal subdivisions reached\n");
-    //   else if(_2dmode) printf("Warning: cannot do this in 2D\n");
-    //   display();
-    //   break;
+    case 's' :
+      if(!_2dmode && subdiv_h < 6){
+        subdiv_h++;
+        applyHorizontalSubdivision();
+        printf("Applying horizontal subdivision level %i\n", subdiv_h);
+      }else if(subdiv_h > 5) printf("Warning: maximum horizontal subdivisions reached\n");
+      else if(_2dmode) printf("Warning: cannot do this in 2D\n");
+      display();
+      break;
 
     case ',':
       if(!_2dmode) rotateCamera(5, X_AXIS);

@@ -31,7 +31,7 @@ void glVertex(vector *vec){
 
 void drawSurface(void) {
     for(int j = 0; j < obj.size() - 1; j++){
-        for(int i = 0; i < num_i0_pts-1; i++){
+        for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
             glColor3f( 0.0f, 0.0f, 0.0f + (j+1.0)/8.0);
             glVertex(obj[j][i]);
@@ -39,7 +39,7 @@ void drawSurface(void) {
             glVertex(obj[j+1][i]);
             glEnd();
         }
-        for(int i = 0; i < num_i0_pts-1; i++){
+        for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
             glColor3f( 0.0f, 0.0f, 0.0f + (j+1.0)/8.0);
             glVertex(obj[j+1][i]);
@@ -48,7 +48,7 @@ void drawSurface(void) {
             glEnd();
         }
     }
-    for(int i = 0; i < num_i0_pts-1; i++){
+    for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
         glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(obj[obj.size()-1][i]);
@@ -56,7 +56,7 @@ void drawSurface(void) {
         glVertex(obj[0][i]);
         glEnd();
     }
-    for(int i = 0; i < num_i0_pts-1; i++){
+    for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
         glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(obj[0][i]);
@@ -81,7 +81,7 @@ void draw3DPoints(void){
     glBegin( GL_POINTS );
     glColor3f( 0.95f, 0.207, 0.031f );
     for(int j = 0; j < obj.size(); j++){
-        for(int i = 0; i < num_i0_pts; i++){
+        for(int i = 0; i < num_draw_pts; i++){
             glVertex3f( obj[j][i]->x, obj[j][i]->y, obj[j][i]->z );
         }
     }
@@ -102,14 +102,14 @@ void draw2DLines(void){
 void draw3DLines(void){
     glLineWidth(2.5);
     for(int j = 0; j < obj.size() - 1; j++){
-        for(int i = 0; i < num_i0_pts-1; i++){
+        for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_LINES);
             glColor3f( 1.0f, 0.0f, 0.0f);
             glVertex(obj[j][i]);
             glVertex(obj[j][i+1]);
             glEnd();
         }
-        for(int i = 0; i < num_i0_pts-1; i++){
+        for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_LINES);
             glColor3f( 0.0f, 1.0f, .0f);
             glVertex(obj[j][i]);
@@ -117,14 +117,14 @@ void draw3DLines(void){
             glEnd();
         }
     }
-    for(int i = 0; i < num_i0_pts-1; i++){
+    for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_LINES);
         glColor3f( 1.0f, 0.0f, 1.0f );
         glVertex(obj[obj.size()-1][i]);
         glVertex(obj[obj.size()-1][i+1]);
         glEnd();
     }
-    for(int i = 0; i < num_i0_pts-1; i++){
+    for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_LINES);
         glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(obj[0][i]);
@@ -155,7 +155,7 @@ void generate3D(void){
     }
 }
 
-void setup2DMode(){
+void setupAxis(){
   // Set up drawing screen
   glLineWidth(2.5);
   glBegin(GL_LINES);
