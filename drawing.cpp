@@ -30,7 +30,7 @@ void glVertex(vector *vec){
 }
 
 void drawSurface(void) {
-    for(uint j = 0; j < obj.size() - 1; j++){
+    for(int j = 0; j < obj.size() - 1; j++){
         for(int i = 0; i < num_i0_pts-1; i++){
             glBegin(GL_POLYGON);
             glColor3f( 0.0f, 0.0f, 0.0f + (j+1.0)/8.0);
@@ -80,7 +80,7 @@ void draw3DPoints(void){
     glPointSize( 6.0 );
     glBegin( GL_POINTS );
     glColor3f( 0.95f, 0.207, 0.031f );
-    for(uint j = 0; j < obj.size(); j++){
+    for(int j = 0; j < obj.size(); j++){
         for(int i = 0; i < num_i0_pts; i++){
             glVertex3f( obj[j][i]->x, obj[j][i]->y, obj[j][i]->z );
         }
@@ -101,7 +101,7 @@ void draw2DLines(void){
 
 void draw3DLines(void){
     glLineWidth(2.5);
-    for(uint j = 0; j < obj.size() - 1; j++){
+    for(int j = 0; j < obj.size() - 1; j++){
         for(int i = 0; i < num_i0_pts-1; i++){
             glBegin(GL_LINES);
             glColor3f( 1.0f, 0.0f, 0.0f);
@@ -135,30 +135,23 @@ void draw3DLines(void){
 
 void generate3D(void){
     printf("Results of rotation: \n");
-
+    obj.resize(3);
     for(int i = 0; i < num_i0_pts; i++){
         vector *vec = new vector(i0_x[i], i0_y[i], 0.0);
-        i0.push_back(vec);
-        printf("i0[%i]: x: %f, y: %f, z: %f\n", i, i0[i]->x, i0[i]->y, i0[i]->z);
+        obj[0].push_back(vec);
+        printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", 0, i, obj[0][i]->x, obj[0][i]->y, obj[0][i]->z);
     }
     for(int i = 0; i < num_i0_pts; i++){
         vector *vec = new vector();
-        i0[i]->rotateVector(120.0, *vec);
-        i1.push_back(vec);
-        printf("i1[%i]: x: %f, y: %f, z: %f\n", i, i1[i]->x, i1[i]->y, i1[i]->z);
+        obj[0][i]->rotateVector(120.0, *vec);
+        obj[1].push_back(vec);
+        printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", 1, i, obj[1][i]->x, obj[1][i]->y, obj[1][i]->z);
     }
 	for(int i = 0; i < num_i0_pts; i++){
         vector *vec = new vector();
-        i0[i]->rotateVector(-120.0, *vec);
-        i2.push_back(vec);
-        printf("i2[%i]: x: %f, y: %f, z: %f\n", i, i2[i]->x, i2[i]->y, i2[i]->z);
-    }
-
-    obj.resize(3);
-    for(int j = 0; j < num_i0_pts; j++){
-        obj[0].push_back(i0[j]);
-        obj[1].push_back(i1[j]);
-        obj[2].push_back(i2[j]);
+        obj[0][i]->rotateVector(-120.0, *vec);
+        obj[2].push_back(vec);
+        printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", 2, i, obj[2][i]->x, obj[2][i]->y, obj[2][i]->z);
     }
 }
 

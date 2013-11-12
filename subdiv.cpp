@@ -202,8 +202,8 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 		  break;
 	  }else if(num_i0_pts > 4){
 		  _2dmode = false;
-      generate3D();
       printf("Rotating into 3D...\n");
+      generate3D();
       display();
     }else
       printf("Warning: Not enough control points to perform rotation\n");
@@ -324,7 +324,7 @@ void myMouseButton(int button, int state, int x, int y) {
         i0_y[num_i0_pts] = new_y;
 		    if(new_x > -20){
           num_i0_pts++;
-          num_total_pts++;
+          num_draw_pts++;
           printf("x: %3d, y: %3d, i: %3d\n", new_x, new_y, num_i0_pts);
 		    }
           display();
