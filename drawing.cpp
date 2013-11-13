@@ -160,8 +160,8 @@ void setupAxis(){
   glLineWidth(2.5);
   glBegin(GL_LINES);
   glColor3f(1.0, 1.0, 1.0);
-  glVertex2f(0.0, 200);
-  glVertex2f(0.0, -200);
+  glVertex2f(0.0, 400);
+  glVertex2f(0.0, -400);
   glEnd();
 }
 

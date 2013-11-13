@@ -94,7 +94,10 @@ void init() {
 
 void display() {
 	glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  GLfloat light_ambient[] = { 1.0, 0.0, 0.0};
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*
@@ -257,7 +260,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       if(!phong)
         printf("Switching to Phong shading\n");
       else
-        printf("Switching to Gouraud shading");
+        printf("Switching to Gouraud shading\n");
       phong = !phong;
       display();
       break;
