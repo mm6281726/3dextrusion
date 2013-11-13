@@ -130,10 +130,23 @@ void subdividePointsArray(int subdiv_level) {
 }
 
 void printPoints(std::vector<std::vector<vector*> > obj){
+	printf("Current points:\n");
 	for(unsigned int j = 0; j < obj.size(); j++)
 		for(unsigned int i = 0; i < obj[0].size(); i++){
-			printf("DANGERTITS #%i %i\n", j, i);
 			std::cout << "obj[" << j << "][" << i << "]: x: " << obj[j][i]->x << ", y: " << obj[j][i]->y << ", z: " << obj[j][i]->z << std::endl;
+		}
+}
+
+void printPointsDebug(std::vector<std::vector<vector*> > obj){
+	for(unsigned int j = 0; j < obj.size(); j++)
+		for(unsigned int i = 0; i < obj[0].size(); i++){
+			printf("POINT #%i %i\n", j, i);
+			std::cout << "obj["; 
+			std::cout << j;
+			std::cout << "][";
+			std::cout << i;
+			std::cout << "]: "<<std::endl;
+			std::cout << "x: " << obj[j][i]->x << ", y: " << obj[j][i]->y << ", z: " << obj[j][i]->z << std::endl;
 		}
 }
 
@@ -181,10 +194,6 @@ void applyHorizontalSubdivision(){
 	std::vector<std::vector<vector*> > new_obj = obj;
 	obj.clear();
 	obj.resize(new_obj.size()*2);
-	for(unsigned int i = 0; i < obj.size(); i++){
-		obj[i].clear();
-		obj[i].resize(num_draw_pts);
-	}
 	int new_point_count;
 	for(int i = 0; i < num_draw_pts; i++){
 		new_point_count = 0;
@@ -209,9 +218,8 @@ void applyHorizontalSubdivision(){
 			new_point_count++;
 		}
 	}
-	//printPoints(obj);
-	num_draw_pts = 2*num_draw_pts-1;
-	printf("dis bitch werks\n");
+	printPoints(obj);
+	printf("num_draw_pts better be 30: %i\n", num_draw_pts);
 }
 
 /**********************************************
