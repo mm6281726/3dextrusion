@@ -48,6 +48,7 @@ GLfloat zFar    = -300.0;
 bool _2dmode = true;
 bool displayCP = false;
 bool wireframe = false;
+bool phong = false;
 
 /* Global zoom factor.  Modified by user input. Initially 1.0 */
 GLfloat zoomFactor = 1.0; 
@@ -93,6 +94,7 @@ void init() {
 
 void display() {
 	glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_LIGHTING);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*
@@ -248,6 +250,15 @@ void myKeyHandler(unsigned char ch, int x, int y) {
         printf("Applying horizontal subdivision level %i\n", subdiv_h);
       }else if(subdiv_h > 5) printf("Warning: maximum horizontal subdivisions reached\n");
       else if(_2dmode) printf("Warning: cannot do this in 2D\n");
+      display();
+      break;
+
+    case 'd' :
+      if(!phong)
+        printf("Switching to Phong shading\n");
+      else
+        printf("Switching to Gouraud shading");
+      phong = !phong;
       display();
       break;
 

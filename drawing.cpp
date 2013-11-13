@@ -50,7 +50,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.0f, 0.0f, 1.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f  - (1.0)/num_draw_pts);
         glVertex(obj[obj.size()-1][i]);
         glVertex(obj[obj.size()-1][i+1]);
         glVertex(obj[0][i]);
@@ -58,7 +58,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.0f, 0.0f, 1.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f  - (1.0)/num_draw_pts);
         glVertex(obj[0][i]);
         glVertex(obj[0][i+1]);
         glVertex(obj[obj.size()-1][i+1]);
