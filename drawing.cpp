@@ -41,7 +41,7 @@ void drawSurface(void) {
         }
         for(int i = 0; i < num_draw_pts-1; i++){
             glBegin(GL_POLYGON);
-            glColor3f( 0.0f, 0.0f, 1.0f - (j+1.0)/num_draw_pts);
+            glColor3f( 0.0f, 0.0f, 1.0f );
             glVertex(obj[j+1][i]);
             glVertex(obj[j+1][i+1]);
             glVertex(obj[j][i+1]);
@@ -50,7 +50,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.0f, 0.0f, 1.0f  - (1.0)/num_draw_pts);
+        glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(obj[obj.size()-1][i]);
         glVertex(obj[obj.size()-1][i+1]);
         glVertex(obj[0][i]);
@@ -58,7 +58,7 @@ void drawSurface(void) {
     }
     for(int i = 0; i < num_draw_pts-1; i++){
         glBegin(GL_POLYGON);
-        glColor3f( 0.0f, 0.0f, 1.0f  - (1.0)/num_draw_pts);
+        glColor3f( 0.0f, 0.0f, 1.0f );
         glVertex(obj[0][i]);
         glVertex(obj[0][i+1]);
         glVertex(obj[obj.size()-1][i+1]);
@@ -133,9 +133,10 @@ void draw3DLines(void){
     }
 }
 
-void generate3D(void){
+void generate3D(bool backTo2D){
     printf("Results of rotation: \n");
-    obj.resize(3);
+    if(!backTo2D)
+        obj.resize(3);
     for(int i = 0; i < num_i0_pts; i++){
         vector *vec = new vector(i0_x[i], i0_y[i], 0.0);
         obj[0].push_back(vec);

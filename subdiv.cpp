@@ -46,6 +46,7 @@ GLfloat zFar    = -300.0;
 #define MOUSE_ZOOM      2
 
 bool _2dmode = true;
+bool backTo2D = false;
 bool displayCP = false;
 bool wireframe = false;
 bool phong = false;
@@ -94,11 +95,8 @@ void init() {
 
 void display() {
 	glEnable(GL_DEPTH_TEST);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat light_ambient[] = { 1.0, 0.0, 0.0};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glDisable(GL_LIGHTING);
 
 	/*
 	 * See drawing.c for the definition of these routines.
@@ -113,12 +111,17 @@ void display() {
         draw2DLines();
       }
     }else{
-	  if(displayCP)
-      draw3DPoints();
-	  else if(wireframe)
-      draw3DLines();
-    else
-      drawSurface();
+  	  if(displayCP)
+        draw3DPoints();
+  	  else if(wireframe)
+        draw3DLines();
+      else{
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        GLfloat light_ambient[] = {1.0, 1.0, 1.0, 1.0};
+        glLightfv(GL_LIGHT0, GL_SPECULAR, light_ambient);
+        drawSurface();
+      }
     }
 
     glFlush();  /* Flush all executed OpenGL ops finish */
@@ -202,11 +205,11 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 			break;
 
     case 'w':
-	  if(!_2dmode){
+	  if(!_2dmode)
       printf("Warning: already in 3D\n");
-	  }else if(num_i0_pts > 4){
+    else if(num_i0_pts > 4){
       printf("Rotating into 3D...\n");
-      generate3D();
+      generate3D(backTo2D);
       _2dmode = false;
       display();
     }else
@@ -217,6 +220,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       if(!_2dmode){ 
         printf("Switching back to 2D...\n");
         resetCamera();
+        backTo2D = true;
       }
       _2dmode = true;
       display();

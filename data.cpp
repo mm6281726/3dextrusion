@@ -219,7 +219,6 @@ void applyHorizontalSubdivision(){
 		}
 	}
 	printPoints(obj);
-	printf("num_draw_pts better be 30: %i\n", num_draw_pts);
 }
 
 /**********************************************

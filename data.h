@@ -24,6 +24,6 @@ extern int num_draw_pts;    // The number of control points to draw
 void subdividePointsArray(int subdiv_level);
 void applyVerticalSubdivision();
 void applyHorizontalSubdivision();
-
+void printPoints(std::vector<std::vector<vector*> > obj);
 
 #endif	/* _DATA_H_ */
