@@ -200,9 +200,9 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 	  if(!_2dmode){
       printf("Warning: already in 3D\n");
 	  }else if(num_i0_pts > 4){
-		  _2dmode = false;
       printf("Rotating into 3D...\n");
       generate3D();
+      _2dmode = false;
       display();
     }else
       printf("Warning: Not enough control points to perform rotation\n");
