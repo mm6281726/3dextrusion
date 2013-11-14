@@ -71,5 +71,10 @@ class vector{
     void setIndices(int first, int second){
         first_index = first; second_index = second;
     }
+
+    void print(){
+        printf("vector: x: %f, y: %f, z: %f\n", x, y, z);
+        //printf("vector %u %u: x: %f, y: %f, z: %f\n", first_index, second_index, x, y, z);
+    }
 };
 #endif

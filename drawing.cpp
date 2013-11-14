@@ -22,96 +22,159 @@
 /* Globals */
 int subdiv_v; // The user-specified subdivision level, vertical
 int subdiv_h; // The user-specified subdivision level, horizontal
-
-GLfloat shininess = 0;
+int stuff = 0;
+GLfloat shininess = 50;
 
 /* The parameter list may need to be changed for the functions in this file */
 
 void glNormal(vector *vec){
     std::vector<vector*> v;
     vector *normal;
+    vector *averaged_normal;
 
     //if the vector is at the top
     if(vec->second_index == 0 ){
         normal = new vector();
         if(vec->first_index == 0){
             normal->crossProduct(*vec, *obj[obj.size()-1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%lu][%i]:\n", obj.size()-1, vec->second_index);
+            obj[obj.size()-1][vec->second_index]->print();
         }else{
             normal->crossProduct(*vec, *obj[vec->first_index-1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", vec->first_index-1, vec->second_index);
+            obj[vec->first_index-1][vec->second_index]->print();
         }
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
         normal = new vector();
         if(vec->first_index == obj.size()-1){
             normal->crossProduct(*vec, *obj[0][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", 0, vec->second_index);
+            obj[0][vec->second_index]->print();
         }else{
             normal->crossProduct(*vec, *obj[vec->first_index+1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", vec->first_index+1, vec->second_index);
+            obj[vec->first_index+1][vec->second_index]->print();
         }
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
         normal = new vector();
         normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index+1]);
+        printf("obj[%i][%i]:\n", vec->first_index, vec->second_index+1);
+        obj[vec->first_index][vec->second_index+1]->print();
+        printf("normal:\n");
+        normal->print();
         v.push_back(normal);
         //average normals
-        vector *averaged_normal = new vector((v[0]->x + v[1]->x + v[2]->x)/3, (v[0]->y + v[1]->y + v[2]->y)/3, (v[0]->z + v[1]->z + v[2]->z)/3);
-        // normal->x = (v[0]->x + v[1]->x + v[2]->x)/3;
-        // normal->y = (v[0]->y + v[1]->y + v[2]->y)/3;
-        // normal->z = (v[0]->z + v[1]->z + v[2]->z)/3;
-        printf("!!!!!!!!!!!!!!!!!!!\n");
+        GLfloat x = (v[0]->x + v[1]->x + v[2]->x)/3.0;
+        GLfloat y = (v[0]->y + v[1]->y + v[2]->y)/3.0;
+        GLfloat z = (v[0]->z + v[1]->z + v[2]->z)/3.0;
+        printf("average x: %f, y: %f, z: %f\n", x, y, z);
+        averaged_normal = new vector(x, y, z);
+
     //if the vector is at the bottom
-    }else if (vec->second_index == obj.size()-1){
+    }else if (vec->second_index == obj[0].size()-1){
         normal = new vector();
         if(vec->first_index == 0){
             normal->crossProduct(*vec, *obj[obj.size()-1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%lu][%i]:\n", obj.size()-1, vec->second_index);
+            obj[obj.size()-1][vec->second_index]->print();
         }else{
             normal->crossProduct(*vec, *obj[vec->first_index-1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", vec->first_index-1, vec->second_index);
+            obj[vec->first_index-1][vec->second_index]->print();
         }
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
         normal = new vector();
         if(vec->first_index == obj.size()-1){
             normal->crossProduct(*vec, *obj[0][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", 0, vec->second_index);
+            obj[0][vec->second_index]->print();
         }else{
             normal->crossProduct(*vec, *obj[vec->first_index+1][vec->second_index]);
-            v.push_back(normal);
+            printf("obj[%i][%i]:\n", vec->first_index+1, vec->second_index);
+            obj[vec->first_index+1][vec->second_index]->print();
         }
-        normal = new vector();
-        normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index+1]);
-        v.push_back(normal);
-
-        //average normals
-        normal = new vector();
-        normal->x = (v[0]->x + v[1]->x + v[2]->x)/3;
-        normal->y = (v[0]->y + v[1]->y + v[2]->y)/3;
-        normal->z = (v[0]->z + v[1]->z + v[2]->z)/3;
-    //else the vector is in the middle
-    }else{
-        normal = new vector();
-        normal->crossProduct(*vec, *obj[vec->first_index-1][vec->second_index]);
-        v.push_back(normal);
-        normal = new vector();
-        normal->crossProduct(*vec, *obj[vec->first_index+1][vec->second_index]);
+        printf("normal:\n");
+        normal->print();
         v.push_back(normal);
         normal = new vector();
         normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index-1]);
-        v.push_back(normal);
-        normal = new vector();
-        normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index+1]);
+        printf("obj[%i][%i]:\n", vec->first_index, vec->second_index-1);
+        obj[vec->first_index][vec->second_index-1]->print();
+        printf("normal:\n");
+        normal->print();
         v.push_back(normal);
 
         //average normals
         normal = new vector();
-        normal->x = (v[0]->x + v[1]->x + v[2]->x + v[3]->x)/4;
-        normal->y = (v[0]->y + v[1]->y + v[2]->y + v[3]->y)/4;
-        normal->z = (v[0]->z + v[1]->z + v[2]->z + v[3]->z)/4;
-    }
+        GLfloat x = (v[0]->x + v[1]->x + v[2]->x)/3.0;
+        GLfloat y = (v[0]->y + v[1]->y + v[2]->y)/3.0;
+        GLfloat z = (v[0]->z + v[1]->z + v[2]->z)/3.0;
+        printf("average x: %f, y: %f, z: %f\n", x, y, z);
+        averaged_normal = new vector(x, y, z);
+    //else the vector is in the middle
+    }else{
+        normal = new vector();
+        if(vec->first_index == 0){
+            normal->crossProduct(*vec, *obj[obj.size()-1][vec->second_index]);
+            printf("obj[%lu][%i]:\n", obj.size()-1, vec->second_index);
+            obj[obj.size()-1][vec->second_index]->print();
+        }else{
+            normal->crossProduct(*vec, *obj[vec->first_index-1][vec->second_index]);
+            printf("obj[%i][%i]:\n", vec->first_index-1, vec->second_index);
+            obj[vec->first_index-1][vec->second_index]->print();
+        }
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
+        normal = new vector();
+        if(vec->first_index == obj.size()-1){
+            normal->crossProduct(*vec, *obj[0][vec->second_index]);
+            printf("obj[%i][%i]:\n", 0, vec->second_index);
+            obj[0][vec->second_index]->print();
+        }else{
+            normal->crossProduct(*vec, *obj[vec->first_index+1][vec->second_index]);
+            printf("obj[%i][%i]:\n", vec->first_index+1, vec->second_index);
+            obj[vec->first_index+1][vec->second_index]->print();
+        }
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
+        normal = new vector();
+        normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index-1]);
+        printf("obj[%i][%i]:\n", vec->first_index, vec->second_index-1);
+        obj[vec->first_index][vec->second_index-1]->print();
+        v.push_back(normal);
+        normal = new vector();
+        normal->crossProduct(*vec, *obj[vec->first_index][vec->second_index+1]);
+        printf("obj[%i][%i]:\n", vec->first_index, vec->second_index+1);
+        obj[vec->first_index][vec->second_index+1]->print();
+        printf("normal:\n");
+        normal->print();
+        v.push_back(normal);
 
-    glNormal3f(normal->x, normal->y, normal->z); 
+        //average normals
+        normal = new vector();
+        GLfloat x = (v[0]->x + v[1]->x + v[2]->x + v[3]->x)/3.0;
+        GLfloat y = (v[0]->y + v[1]->y + v[2]->y + v[3]->y)/3.0;
+        GLfloat z = (v[0]->z + v[1]->z + v[2]->z + v[3]->z)/3.0;
+        printf("average x: %f, y: %f, z: %f\n", x, y, z);
+        averaged_normal = new vector(x, y, z);
+    }
+    printf("averaged normal:\n");
+    averaged_normal->print();
+    glNormal3f(averaged_normal->x, averaged_normal->y, averaged_normal->z); 
 }
 
 void glVertex(vector *vec){
     glVertex3f(vec->x, vec->y, vec->z);
+    printf("vec %i: %i %i\n", stuff++, vec->first_index, vec->second_index);
+    vec->print();
     glNormal(vec);
 }
 
@@ -240,6 +303,7 @@ void generate3D(bool backTo2D){
         obj[2].push_back(vec);
         printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", 2, i, obj[2][i]->x, obj[2][i]->y, obj[2][i]->z);
     }
+    generateIndices();
 }
 
 void setupAxis(){
@@ -257,7 +321,7 @@ void setupLighting(void){
     glEnable(GL_LIGHT0);
 
     glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT, GL_AMBIENT);
+    // glColorMaterial(GL_FRONT, GL_AMBIENT);
     // glColorMaterial(GL_FRONT, GL_DIFFUSE);
     // glColorMaterial(GL_FRONT, GL_SPECULAR);
 

@@ -188,6 +188,7 @@ void applyVerticalSubdivision(){
 	}
 	printPoints(obj);
 	num_draw_pts = 2*num_draw_pts-1;
+	generateIndices();
 }
 
 void applyHorizontalSubdivision(){
@@ -218,6 +219,7 @@ void applyHorizontalSubdivision(){
 			new_point_count++;
 		}
 	}
+	generateIndices();
 	printPoints(obj);
 }
 
