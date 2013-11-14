@@ -51,9 +51,6 @@ bool displayCP = false;
 bool wireframe = false;
 bool phong = false;
 
-/* Global zoom factor.  Modified by user input. Initially 1.0 */
-GLfloat zoomFactor = 1.0; 
-
 /* The current mode the mouse is in, based on what button(s) is pressed */
 int mouse_mode;
 
@@ -62,7 +59,6 @@ int m_last_x, m_last_y;
 
 /* local function declarations */
 void init(void);
-void setUp2DMode();
 void display(void);
 void rotateCamera(double deg, int axis);
 void resetCamera( void );
@@ -97,6 +93,7 @@ void display() {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glDisable(GL_LIGHTING);
+  glEnable(GL_NORMALIZE);
 
 	/*
 	 * See drawing.c for the definition of these routines.
@@ -116,10 +113,7 @@ void display() {
   	  else if(wireframe)
         draw3DLines();
       else{
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        GLfloat light_ambient[] = {1.0, 1.0, 1.0, 1.0};
-        glLightfv(GL_LIGHT0, GL_SPECULAR, light_ambient);
+        setupLighting();
         drawSurface();
       }
     }
@@ -152,39 +146,10 @@ void rotateCamera(double deg, int axis) {
 }
 
 /*
- * Changes the level of zooming by adjusting the dimenstions of the viewing
- * frustum.
- *
- * Args: delta - the change in the zoom factor.  Negative deltas cause the
- * camera to zoom in, while positive values cause the camera to zoom out.
- */
-void zoomCamera(double delta) {
-  zoomFactor += delta;
-
-  if (zoomFactor <= 0.0) {
-    /* The zoom factor should be positive */
-    zoomFactor = 0.001;
-  }
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  /*
-   * glFrustum must receive positive values for the near and far clip planes
-   * ( arguments 5 and 6 ).
-   */
-  glFrustum(fleft*zoomFactor, fright*zoomFactor,
-    fbottom*zoomFactor, ftop*zoomFactor,
-    -zNear, -zFar);
-
-}
-
-/*
  * Resets the viewing frustum and moves the drawing point to the center of
  * the frustum.
  */
 void resetCamera( void ) {
-  zoomFactor = 1.0;
   glClearColor(0.0, 0.0, 0.0, 0.0);  
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -250,7 +215,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       display();
       break;
 
-    case 's' :
+    case 'b' :
       if(!_2dmode && subdiv_h < 6){
         subdiv_h++;
         applyHorizontalSubdivision();
@@ -267,6 +232,26 @@ void myKeyHandler(unsigned char ch, int x, int y) {
         printf("Switching to Gouraud shading\n");
       phong = !phong;
       display();
+      break;
+
+    case 's' :
+      if(shininess < 128){
+        shininess++;
+        printf("Shininess is now %f\n", shininess);
+        display();
+      }
+      else
+        printf("Warning: maximum shininess reached\n");
+      break;
+
+    case 'S' :
+      if(shininess > 0){
+        shininess--;
+        printf("Shininess is now %f\n", shininess);
+        display();
+      }
+      else
+        printf("Warning: minimum shininess reached\n");
       break;
 
     case ',':
@@ -292,17 +277,6 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     case '?':
       if(!_2dmode) rotateCamera(-5, Z_AXIS);
       break;
-
-    case '+':
-      /* Zoom in */
-      zoomCamera(-0.1);
-      break;
-
-    case '=':
-      /* Zoom out */
-      zoomCamera(0.1);
-      break;
-
 
 		default:
 			/* Unrecognized keypress */
@@ -389,13 +363,6 @@ void myMouseMotion(int x, int y) {
   } else if (mouse_mode == MOUSE_ZOOM) {
     d_y /= 100.0;
 
-    zoomFactor += d_y;
-
-    if (zoomFactor <= 0.0) {
-      /* The zoom factor should be positive */
-      zoomFactor = 0.001;
-    }
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -403,8 +370,8 @@ void myMouseMotion(int x, int y) {
      * glFrustum must receive positive values for the near and far
      * clip planes ( arguments 5 and 6 ).
      */
-    glFrustum(fleft*zoomFactor, fright*zoomFactor,
-      fbottom*zoomFactor, ftop*zoomFactor,
+    glFrustum(fleft, fright,
+      fbottom, ftop,
       -zNear, -zFar);
   }
 

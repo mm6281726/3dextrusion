@@ -9,6 +9,9 @@ class vector{
         GLfloat z;
         GLfloat w;
 
+        unsigned int first_index;
+        unsigned int second_index;
+
     vector(GLfloat _x, GLfloat _y, GLfloat _z, GLfloat _w) : x(_x), y(_y), z(_z), w(_w) {}
     vector(GLfloat _x, GLfloat _y, GLfloat _z) : x(_x), y(_y), z(_z), w(0.0) {}
     vector(GLfloat _x, GLfloat _y) : x(_x), y(_y), z(0.0), w(0.0) {}
@@ -57,6 +60,16 @@ class vector{
                             -sin(angle * (3.14/180)),0.0, cos(angle * (3.14/180)), 0.0,
                             0.0,        0.0,        0.0, 1.0};
         matrixVectorMultiply(rmat, new_vec);
+    }
+
+    void crossProduct(vector& a, vector& b){
+        this->x = a.y*b.z - a.z*b.y;
+        this->y = a.z*b.x - a.x*b.z;
+        this->z = a.x*b.y - a.y*b.x;
+    }
+
+    void setIndices(int first, int second){
+        first_index = first; second_index = second;
     }
 };
 #endif

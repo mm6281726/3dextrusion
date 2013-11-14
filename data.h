@@ -25,5 +25,6 @@ void subdividePointsArray(int subdiv_level);
 void applyVerticalSubdivision();
 void applyHorizontalSubdivision();
 void printPoints(std::vector<std::vector<vector*> > obj);
+void generateIndices();
 
 #endif	/* _DATA_H_ */

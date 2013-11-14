@@ -3,15 +3,11 @@ Project 3 Individual Written Questions
 Name: Michael Madden
 Email Address: m.adamsmadden@gmail.com
 
-1.
+1.  This can be done rather easily through the current implementation.  I have stored all of the points in a 2D vector so it is just a matter of running through all of the points and putting them in a file.  All of the vectors in the 2D vector are of the same length so it should be easy to write this neatly to a file. When the faces are rendered they are done so in the face index order so it is just a matter of writing to a file at the same time the faces are being created.  The color and normals are done at the same time so the same process would work.
+
+2. 
 
 
-2.
+3. When rotating a 2D square curve, it produces a 3D triangle shape with a hole in the middle (if the square is not drawn against the axis).  Once fully smoothed out, this shape produces a torus.  The same thing will result from a square with no internal control points.  This is because those control points will be added on the first subdivision.  It may be a slightly different shape since the control points move depending on the ones that surround them, but it should be the same basic shape. I tested this using my program and the results confirmed this.
 
-
-3.
-
-
-4.
-
-
+4. I believe that my algorithm can already handle creating objects with holes in them like tori and vases.  For instance, making a circle and then rotating it creates a 3D triangle shape that can then be smoothed out into a torus.  The same stands for trying to make a vase by drawing a 3D L shape with the bottom going towards the axis of symmetry. 
