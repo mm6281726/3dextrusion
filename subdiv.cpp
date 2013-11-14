@@ -297,9 +297,9 @@ void myMouseButton(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON) {
       mouse_mode = MOUSE_ROTATE_YX;
     } else if (button == GLUT_MIDDLE_BUTTON) {
-      mouse_mode = MOUSE_ROTATE_YZ;
-    } else if (button == GLUT_RIGHT_BUTTON) {
       mouse_mode = MOUSE_ZOOM;
+    } else if (button == GLUT_RIGHT_BUTTON) {
+      mouse_mode = MOUSE_ROTATE_YZ;
     }
   }
 
@@ -326,6 +326,7 @@ void myMouseButton(int button, int state, int x, int y) {
   else if (button == GLUT_RIGHT_BUTTON && _2dmode) {
     if(num_i0_pts > 0){
       num_i0_pts--;
+      num_draw_pts--;
 			printf("Deleted point i: %3d\n", num_i0_pts);
       display();
     }else
