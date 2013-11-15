@@ -186,7 +186,6 @@ void applyVerticalSubdivision(){
 		stack.push_back(new_obj[j][num_draw_pts-1]);
 		obj.push_back(stack);
 	}
-	printPoints(obj);
 	num_draw_pts = 2*num_draw_pts-1;
 	generateIndices();
 }
@@ -220,7 +219,6 @@ void applyHorizontalSubdivision(){
 		}
 	}
 	generateIndices();
-	printPoints(obj);
 }
 
 //generate indices for calculating normals of vertices
