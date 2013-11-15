@@ -13,7 +13,7 @@ void draw2DPoints(void);
 void draw3DPoints(void);
 void draw2DLines(void);
 void draw3DLines(void);
-void generate3D(bool backTo2D);
+void generate3D(void);
 void setupAxis(void);
 void setupLighting(void);
 

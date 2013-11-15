@@ -46,7 +46,6 @@ GLfloat zFar    = -300.0;
 #define MOUSE_ZOOM      2
 
 bool _2dmode = true;
-bool backTo2D = false;
 bool displayCP = false;
 bool wireframe = false;
 bool phong = false;
@@ -174,7 +173,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       printf("Warning: already in 3D\n");
     else if(num_i0_pts > 4){
       printf("Rotating into 3D...\n");
-      generate3D(backTo2D);
+      generate3D();
       _2dmode = false;
       display();
     }else
@@ -185,9 +184,8 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       if(!_2dmode){ 
         printf("Switching back to 2D...\n");
         resetCamera();
-        backTo2D = true;
       }
-      _2dmode = true;
+      _2dmode = true; 
       display();
       break;
 	
@@ -236,7 +234,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
     case 's' :
       if(shininess < 128){
-        shininess++;
+        shininess+=2;
         printf("Shininess is now %f\n", shininess);
         display();
       }
@@ -246,7 +244,7 @@ void myKeyHandler(unsigned char ch, int x, int y) {
 
     case 'S' :
       if(shininess > 0){
-        shininess--;
+        shininess-=2;
         printf("Shininess is now %f\n", shininess);
         display();
       }
@@ -325,9 +323,9 @@ void myMouseButton(int button, int state, int x, int y) {
 
   else if (button == GLUT_RIGHT_BUTTON && _2dmode) {
     if(num_i0_pts > 0){
+      printf("Deleted point i: %3d\n", num_i0_pts);
       num_i0_pts--;
       num_draw_pts--;
-			printf("Deleted point i: %3d\n", num_i0_pts);
       display();
     }else
 			printf("Warning: No points to delete\n");

@@ -228,7 +228,6 @@ void generateIndices(){
 	for(unsigned int i = 0; i < obj.size(); i++)
 		for(unsigned int j = 0; j < obj[0].size(); j++){
 			obj[i][j]->setIndices(i, j);
-			obj[i][j]->printi();
 		}
 }
 
