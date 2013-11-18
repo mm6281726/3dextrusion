@@ -12,6 +12,7 @@ extern GLfloat i0_x[MAX_POINT];	// Iteration 0 control points, x
 extern GLfloat i0_y[MAX_POINT];	// Iteration 0 control points, y
 
 extern std::vector<std::vector<vector*> > obj;
+extern std::vector<std::vector<vector*> > phong_obj;
 
 extern int num_i0_pts;			// The number of iteration 0 control points
 
@@ -22,9 +23,10 @@ extern int num_draw_pts;    // The number of control points to draw
 
 /* Functions implemented in data.cpp */
 void subdividePointsArray(int subdiv_level);
-void applyVerticalSubdivision();
-void applyHorizontalSubdivision();
-void printPoints(std::vector<std::vector<vector*> > obj);
-void generateIndices();
+void applyVerticalSubdivision(std::vector<std::vector<vector*> > &vecobj);
+void applyHorizontalSubdivision(std::vector<std::vector<vector*> > &vecobj);
+void printPoints(std::vector<std::vector<vector*> > vecobj);
+void phongSubdivision();
+void generateIndices(std::vector<std::vector<vector*> > &vecobj);
 
 #endif	/* _DATA_H_ */

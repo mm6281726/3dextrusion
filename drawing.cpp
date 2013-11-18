@@ -24,6 +24,7 @@ int subdiv_v; // The user-specified subdivision level, vertical
 int subdiv_h; // The user-specified subdivision level, horizontal
 int stuff = 0;
 GLfloat shininess = 10;
+bool phong = false;
 
 vector* calculateNormal(vector* v1, vector* v2, vector* v3){
     vector* normal = new vector();
@@ -33,7 +34,7 @@ vector* calculateNormal(vector* v1, vector* v2, vector* v3){
     return normal;
 }
 
-void glNormal(vector* vec){
+void glNormal(vector* vec, std::vector<std::vector<vector*> > vecobj){
     GLfloat avg_x, avg_y, avg_z;
     int vec_first_index = (int)vec->first_index;
     int vec_second_index = (int)vec->second_index;
@@ -52,27 +53,27 @@ void glNormal(vector* vec){
 
     //loop to end
     if(vec_first_index == 0){
-        left_first_index = obj.size()-1;
+        left_first_index = vecobj.size()-1;
     //loop to beginning
-    }else if(vec_first_index == (int)obj.size()-1){
+    }else if(vec_first_index == (int)vecobj.size()-1){
         right_first_index = 0;
     }
 
     //if at the top
     if(vec_second_index == 0){
-        vector* normaltop = calculateNormal(vec, obj[right_first_index][right_second_index], obj[left_first_index][left_second_index]);
-        vector* normalbottomright = calculateNormal(vec, obj[bottom_first_index][bottom_second_index], obj[right_first_index][right_second_index]);
-        vector* normalbottomleft = calculateNormal(vec, obj[left_first_index][left_second_index], obj[bottom_first_index][bottom_second_index]);
+        vector* normaltop = calculateNormal(vec, vecobj[right_first_index][right_second_index], vecobj[left_first_index][left_second_index]);
+        vector* normalbottomright = calculateNormal(vec, vecobj[bottom_first_index][bottom_second_index], vecobj[right_first_index][right_second_index]);
+        vector* normalbottomleft = calculateNormal(vec, vecobj[left_first_index][left_second_index], vecobj[bottom_first_index][bottom_second_index]);
 
         avg_x = (normaltop->x + normalbottomright->x + normalbottomleft->x)/3.0;
         avg_y = (normaltop->y + normalbottomright->y + normalbottomleft->y)/3.0;
         avg_z = (normaltop->z + normalbottomright->z + normalbottomleft->z)/3.0;
 
     //if at the bottom
-    }else if(vec_second_index == (int)obj[0].size()-1){
-        vector* normaltopleft = calculateNormal(vec, obj[top_first_index][top_second_index], obj[left_first_index][left_second_index]);
-        vector* normaltopright = calculateNormal(vec, obj[right_first_index][right_second_index],  obj[top_first_index][top_second_index]);
-        vector* normalbottom = calculateNormal(vec, obj[right_first_index][right_second_index], obj[left_first_index][left_second_index]);
+    }else if(vec_second_index == (int)vecobj[0].size()-1){
+        vector* normaltopleft = calculateNormal(vec, vecobj[top_first_index][top_second_index], vecobj[left_first_index][left_second_index]);
+        vector* normaltopright = calculateNormal(vec, vecobj[right_first_index][right_second_index],  vecobj[top_first_index][top_second_index]);
+        vector* normalbottom = calculateNormal(vec, vecobj[right_first_index][right_second_index], vecobj[left_first_index][left_second_index]);
 
         avg_x = (normaltopleft->x + normaltopright->x + normalbottom->x)/3.0;
         avg_y = (normaltopleft->y + normaltopright->y + normalbottom->y)/3.0;
@@ -80,10 +81,10 @@ void glNormal(vector* vec){
 
     //if at the middle
     }else{
-        vector* normaltopleft = calculateNormal(vec, obj[top_first_index][top_second_index], obj[left_first_index][left_second_index]);
-        vector* normaltopright = calculateNormal(vec, obj[right_first_index][right_second_index],  obj[top_first_index][top_second_index]);
-        vector* normalbottomright = calculateNormal(vec, obj[bottom_first_index][bottom_second_index], obj[right_first_index][right_second_index]);
-        vector* normalbottomleft = calculateNormal(vec, obj[left_first_index][left_second_index], obj[bottom_first_index][bottom_second_index]);
+        vector* normaltopleft = calculateNormal(vec, vecobj[top_first_index][top_second_index], vecobj[left_first_index][left_second_index]);
+        vector* normaltopright = calculateNormal(vec, vecobj[right_first_index][right_second_index],  vecobj[top_first_index][top_second_index]);
+        vector* normalbottomright = calculateNormal(vec, vecobj[bottom_first_index][bottom_second_index], vecobj[right_first_index][right_second_index]);
+        vector* normalbottomleft = calculateNormal(vec, vecobj[left_first_index][left_second_index], vecobj[bottom_first_index][bottom_second_index]);
 
         avg_x = (normaltopleft->x + normaltopright->x + normalbottomright->x + normalbottomleft->x)/4.0;
         avg_y = (normaltopleft->y + normaltopright->y + normalbottomright->y + normalbottomleft->y)/4.0;
@@ -107,7 +108,10 @@ void defineMaterial(){
 
 void glVertex(vector *vec){
     defineMaterial();
-    glNormal(vec);
+    if(!phong)
+        glNormal(vec, obj);
+    else
+        glNormal(vec, phong_obj);
     glVertex3f(vec->x, vec->y, vec->z);
 }
 
@@ -236,7 +240,7 @@ void generate3D(){
         obj[2].push_back(vec);
         printf("obj[%i][%i]: x: %f, y: %f, z: %f\n", 2, i, obj[2][i]->x, obj[2][i]->y, obj[2][i]->z);
     }
-    generateIndices();
+    generateIndices(obj);
 }
 
 void setupAxis(){

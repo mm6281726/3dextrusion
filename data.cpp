@@ -24,6 +24,7 @@ GLfloat i0_x[MAX_POINT];    // Iteration 0 control points, x
 GLfloat i0_y[MAX_POINT];    // Iteration 0 control points, y
 
 std::vector<std::vector<vector*> > obj;
+std::vector<std::vector<vector*> > phong_obj;
 
 int num_i0_pts;             // The number of iteration 0 control points
 
@@ -129,24 +130,24 @@ void subdividePointsArray(int subdiv_level) {
 	return;
 }
 
-void printPoints(std::vector<std::vector<vector*> > obj){
+void printPoints(std::vector<std::vector<vector*> > vecobj){
 	printf("Current points:\n");
-	for(unsigned int j = 0; j < obj.size(); j++)
-		for(unsigned int i = 0; i < obj[0].size(); i++){
-			std::cout << "obj[" << j << "][" << i << "]: x: " << obj[j][i]->x << ", y: " << obj[j][i]->y << ", z: " << obj[j][i]->z << std::endl;
+	for(unsigned int j = 0; j < vecobj.size(); j++)
+		for(unsigned int i = 0; i < vecobj[0].size(); i++){
+			std::cout << "vecobj[" << j << "][" << i << "]: x: " << vecobj[j][i]->x << ", y: " << vecobj[j][i]->y << ", z: " << vecobj[j][i]->z << std::endl;
 		}
 }
 
-void printPointsDebug(std::vector<std::vector<vector*> > obj){
-	for(unsigned int j = 0; j < obj.size(); j++)
-		for(unsigned int i = 0; i < obj[0].size(); i++){
+void printPointsDebug(std::vector<std::vector<vector*> > vecobj){
+	for(unsigned int j = 0; j < vecobj.size(); j++)
+		for(unsigned int i = 0; i < vecobj[0].size(); i++){
 			printf("POINT #%i %i\n", j, i);
-			std::cout << "obj["; 
+			std::cout << "vecobj["; 
 			std::cout << j;
 			std::cout << "][";
 			std::cout << i;
 			std::cout << "]: "<<std::endl;
-			std::cout << "x: " << obj[j][i]->x << ", y: " << obj[j][i]->y << ", z: " << obj[j][i]->z << std::endl;
+			std::cout << "x: " << vecobj[j][i]->x << ", y: " << vecobj[j][i]->y << ", z: " << vecobj[j][i]->z << std::endl;
 		}
 }
 
@@ -164,68 +165,73 @@ void applyOddRule(vector &new_vec, vector &left_vec, vector &right_vec){
 	new_vec.z = (1.0/8.0)*(4.0*left_vec.z + 4.0*right_vec.z);
 }
 
-void applyVerticalSubdivision(){
-	std::vector<std::vector<vector*> > new_obj = obj;
+void applyVerticalSubdivision(std::vector<std::vector<vector*> > &vecobj){
+	std::vector<std::vector<vector*> > new_vecobj = vecobj;
 	std::vector<vector*> stack (num_draw_pts);
-	obj.clear();
-	for(unsigned int j = 0; j < new_obj.size(); j++){
+	vecobj.clear();
+	for(unsigned int j = 0; j < new_vecobj.size(); j++){
 		stack.clear();
-		stack.push_back(new_obj[j][0]);
+		stack.push_back(new_vecobj[j][0]);
 		for(int i = 1; i < num_draw_pts; i++){
 			//Odd Rule
 			vector *vec1 = new vector();
-			applyOddRule(*vec1, *new_obj[j][i-1], *new_obj[j][i]);
+			applyOddRule(*vec1, *new_vecobj[j][i-1], *new_vecobj[j][i]);
 			stack.push_back(vec1);
 
 			//Even Rule
 			if(i == num_draw_pts-1) continue;
 			vector *vec2 = new vector();
-		    applyEvenRule(*vec2, *new_obj[j][i-1], *new_obj[j][i], *new_obj[j][i+1]);
+		    applyEvenRule(*vec2, *new_vecobj[j][i-1], *new_vecobj[j][i], *new_vecobj[j][i+1]);
 		    stack.push_back(vec2);
 		}
-		stack.push_back(new_obj[j][num_draw_pts-1]);
-		obj.push_back(stack);
+		stack.push_back(new_vecobj[j][num_draw_pts-1]);
+		vecobj.push_back(stack);
 	}
 	num_draw_pts = 2*num_draw_pts-1;
-	generateIndices();
+	generateIndices(vecobj);
 }
 
-void applyHorizontalSubdivision(){
-	std::vector<std::vector<vector*> > new_obj = obj;
-	obj.clear();
-	obj.resize(new_obj.size()*2);
+void applyHorizontalSubdivision(std::vector<std::vector<vector*> > &vecobj){
+	std::vector<std::vector<vector*> > new_vecobj = vecobj;
+	vecobj.clear();
+	vecobj.resize(new_vecobj.size()*2);
 	int new_point_count;
 	for(int i = 0; i < num_draw_pts; i++){
 		new_point_count = 0;
-		for(unsigned int j = 0; j < new_obj.size(); j++){
+		for(unsigned int j = 0; j < new_vecobj.size(); j++){
 			vector *vec1 = new vector();
 			if(j == 0)
-				applyEvenRule(*vec1, *new_obj[new_obj.size()-1][i], *new_obj[j][i], *new_obj[j+1][i]);
-			else if(j == new_obj.size()-1)
-				applyEvenRule(*vec1, *new_obj[j-1][i], *new_obj[j][i], *new_obj[0][i]);
+				applyEvenRule(*vec1, *new_vecobj[new_vecobj.size()-1][i], *new_vecobj[j][i], *new_vecobj[j+1][i]);
+			else if(j == new_vecobj.size()-1)
+				applyEvenRule(*vec1, *new_vecobj[j-1][i], *new_vecobj[j][i], *new_vecobj[0][i]);
 			else
-				applyEvenRule(*vec1, *new_obj[j-1][i], *new_obj[j][i], *new_obj[j+1][i]);
-			obj[new_point_count].push_back(vec1);
+				applyEvenRule(*vec1, *new_vecobj[j-1][i], *new_vecobj[j][i], *new_vecobj[j+1][i]);
+			vecobj[new_point_count].push_back(vec1);
 			new_point_count++;
 
 			vector *vec2 = new vector();
-			if(j == new_obj.size()-1){
-				applyOddRule(*vec2, *new_obj[j][i], *new_obj[0][i]);
+			if(j == new_vecobj.size()-1){
+				applyOddRule(*vec2, *new_vecobj[j][i], *new_vecobj[0][i]);
 			}else{
-				applyOddRule(*vec2, *new_obj[j][i], *new_obj[j+1][i]);
+				applyOddRule(*vec2, *new_vecobj[j][i], *new_vecobj[j+1][i]);
 			}
-			obj[new_point_count].push_back(vec2);
+			vecobj[new_point_count].push_back(vec2);
 			new_point_count++;
 		}
 	}
-	generateIndices();
+	generateIndices(vecobj);
+}
+
+void phongSubdivision(){
+	applyVerticalSubdivision(phong_obj);
+	applyHorizontalSubdivision(phong_obj);
 }
 
 //generate indices for calculating normals of vertices
-void generateIndices(){
-	for(unsigned int i = 0; i < obj.size(); i++)
-		for(unsigned int j = 0; j < obj[0].size(); j++){
-			obj[i][j]->setIndices(i, j);
+void generateIndices(std::vector<std::vector<vector*> > &vecobj){
+	for(unsigned int i = 0; i < vecobj.size(); i++)
+		for(unsigned int j = 0; j < vecobj[0].size(); j++){
+			vecobj[i][j]->setIndices(i, j);
 		}
 }
 

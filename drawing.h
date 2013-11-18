@@ -6,6 +6,7 @@ extern int subdiv_v; // The user-specified subdivision level, vertical
 extern int subdiv_h; // The user-specified subdivision level, horizontal
 
 extern GLfloat shininess; //shininess of object
+extern bool phong;
 
 /* Functions implemented in drawing.cpp */
 void drawSurface(void);

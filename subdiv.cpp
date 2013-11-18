@@ -48,7 +48,6 @@ GLfloat zFar    = -300.0;
 bool _2dmode = true;
 bool displayCP = false;
 bool wireframe = false;
-bool phong = false;
 
 /* The current mode the mouse is in, based on what button(s) is pressed */
 int mouse_mode;
@@ -206,7 +205,11 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     case 'a' :
       if(!_2dmode && subdiv_v < 6){
         subdiv_v++;
-        applyVerticalSubdivision();
+        applyVerticalSubdivision(obj);
+        if(phong){
+          phong_obj = obj;
+          phongSubdivision();
+        }
         printf("Applying vertical subdivision level %i\n", subdiv_v);
         display();
       }else if(subdiv_v > 5) printf("Warning: maximum vertical subdivisions reached\n");
@@ -216,7 +219,11 @@ void myKeyHandler(unsigned char ch, int x, int y) {
     case 'b' :
       if(!_2dmode && subdiv_h < 6){
         subdiv_h++;
-        applyHorizontalSubdivision();
+        applyHorizontalSubdivision(obj);
+        if(phong){
+          phong_obj = obj;
+          phongSubdivision();
+        }
         display();
         printf("Applying horizontal subdivision level %i\n", subdiv_h);
       }else if(subdiv_h > 5) printf("Warning: maximum horizontal subdivisions reached\n");
@@ -224,10 +231,15 @@ void myKeyHandler(unsigned char ch, int x, int y) {
       break;
 
     case 'd' :
-      if(!phong)
+      if(!_2dmode && !phong){
         printf("Switching to Phong shading\n");
-      else
+        phong_obj = obj;
+        //phongSubdivision();
+      }else if(!_2dmode){
         printf("Switching to Gouraud shading\n");
+      }else{
+        printf("Warning: cannot do this in 2D\n");
+      }
       phong = !phong;
       display();
       break;
